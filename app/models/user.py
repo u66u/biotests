@@ -28,4 +28,6 @@ class User(Base):
     )
     hashed_password: Mapped[str] = mapped_column(String(128), nullable=False)
 
-    orders: Mapped[List[Order]] = relationship("Order", back_populates="user")
+    orders: Mapped[List[Order]] = relationship(
+        "Order", back_populates="user", lazy="selectin"
+    )

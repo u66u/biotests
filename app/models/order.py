@@ -38,5 +38,5 @@ class Order(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
-    user: Mapped[User] = relationship("User", back_populates="orders")
-    test: Mapped[BiologicalTest] = relationship("BiologicalTest")
+    user: Mapped[User] = relationship("User", back_populates="orders", lazy="selectin")
+    test: Mapped[BiologicalTest] = relationship("BiologicalTest", lazy="selectin")

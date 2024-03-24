@@ -1,16 +1,17 @@
-"""new user model
+"""user, order, test models work
 
-Revision ID: a2a599638d91
+Revision ID: 5fe2ff8986d7
 Revises: 2530e177d0c6
-Create Date: 2024-03-24 19:47:28.644806
+Create Date: 2024-03-24 22:03:35.512934
 
 """
+
 from alembic import op
 import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "a2a599638d91"
+revision = "5fe2ff8986d7"
 down_revision = "2530e177d0c6"
 branch_labels = None
 depends_on = None
@@ -115,4 +116,5 @@ def downgrade():
     op.drop_table("blood_test")
     op.drop_index(op.f("ix_biological_test_test_type"), table_name="biological_test")
     op.drop_table("biological_test")
+    op.execute("DROP TYPE IF EXISTS testtype")
     # ### end Alembic commands ###

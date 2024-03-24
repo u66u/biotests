@@ -1,15 +1,19 @@
+from typing import List
 from fastapi import APIRouter, Depends
+from sqlalchemy import select
+from app.models.user import User
+from app.models.order import Order
 from app.models.biological_test import BloodTest, DNATest
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.requests import BloodTestCreateRequest, DNATestCreateRequest
-from app.schemas.responses import BloodTestResponse, DNATestResponse
+from app.schemas.responses import BloodTestResponse, DNATestResponse, OrderResponse
 from app.api import deps
 from datetime import datetime
 
 router = APIRouter()
 
 
-@router.post("/blood-tests", response_model=BloodTestResponse)
+@router.post("/new-blood-test", response_model=BloodTestResponse)
 async def create_blood_test(
     test_data: BloodTestCreateRequest,
     session: AsyncSession = Depends(deps.get_session),
