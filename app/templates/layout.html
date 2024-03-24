@@ -1,26 +1,39 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="static/js/htmx.js"></script>
+    <script src="/static/js/htmx.js"></script>
     <link rel="stylesheet" href="/static/css/tailwind.css">
-    <link rel="stylesheet" href="/static/css/layout.css">
+    <!-- <link rel="stylesheet" href="/static/css/layout.css"> -->
     <title>{% block title %}{% endblock %}</title>
     {% block head %}{% endblock %}
 </head>
 
-<body class="bg-emerald-950 text-white">
-    <div class="container mx-auto px-4 py-8">
-        <header class="mb-8">
-            <h1 class="text-4xl font-bold mb-4">{% block header %}{% endblock %}</h1>
+<body class="bg-emerald-950 text-zinc-200">
+    <div class="container mx-auto px-4 py-8 w-11/12 md:w-7/12">
+        <header class="mb-4">
+            <div class="flex items-center mb-4">
+                <div class="my-14 mr-4 text-white/50 h-8 w-8 flex items-center justify-center bg-gray-600 rounded-full">■</div>
+                <h2 class="text-2xl font-bold">{% block header %}{% endblock %}</h2>
+            </div>
         </header>
+        <nav class="text-sm mb-8">
+            <ul class="flex justify-start space-x-4">
+                <li><a href="/" class="text-white hover:text-gray-300 text-lg">Home</a></li>
+                <li class="hidden sm:inline">·</li>
+                <li><a href="/about" class="text-white hover:text-gray-300 text-lg">About</a></li>
+                <li class="hidden sm:inline">·</li>
+                <li><a href="/services" class="text-white hover:text-gray-300 text-lg">Services</a></li>
+                <li class="hidden sm:inline">·</li>
+                <li><a href="/contact" class="text-white hover:text-gray-300 text-lg">Contact</a></li>
+            </ul>
+        </nav>
         <main>
             {% block content %}{% endblock %}
         </main>
         <footer class="mt-8">
             {% block footer %}
-                <p>&copy; {{ current_year }} Your Company Name. All rights reserved.</p>
+            <p>&copy; {{ current_year }} Your Company Name. All rights reserved.</p>
             {% endblock %}
         </footer>
     </div>

@@ -6,11 +6,17 @@ from app.models.order import Order
 from app.models.biological_test import BloodTest, DNATest
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.requests import BloodTestCreateRequest, DNATestCreateRequest
-from app.schemas.responses import BloodTestResponse, DNATestResponse, OrderResponse
+from app.schemas.responses import BloodTestResponse, DNATestResponse
+from app.schemas.data import tests
 from app.api import deps
 from datetime import datetime
 
 router = APIRouter()
+
+
+@router.get("/all")
+async def get_tests():
+    return tests
 
 
 @router.post("/new-blood-test", response_model=BloodTestResponse)

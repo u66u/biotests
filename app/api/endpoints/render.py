@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.responses import HTMLResponse
 from sqlalchemy.orm import Session
-
+from app.schemas.data import tests
 
 router = APIRouter()
 
@@ -19,7 +19,7 @@ async def index(request: Request):
 
 @router.get("/test", response_class=HTMLResponse)
 async def render_test(request: Request):
-    return templates.TemplateResponse("test.html", {"request": request})
+    return templates.TemplateResponse("test.html", {"request": request, "tests": tests})
 
 
 @router.get("/kit", response_class=HTMLResponse)

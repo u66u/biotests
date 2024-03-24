@@ -1,7 +1,30 @@
 {% extends "layout.html" %}
 
-{% block title %}Page Title{% endblock %}
+{% block title %}
+Test Your Biological Age
+{% endblock %}
+
+{% block header %} Free biological age tests for the people!{% endblock %}
 
 {% block content %}
-    <p>Your page content goes here.</p>
+<div class="prose prose-lg max-w-none">
+    <p>Welcome to our platform where you can test your biological age using a variety of blood tests. Our service allows you to gain insights into your health and longevity through detailed analysis and comparison with scientific standards.</p>
+
+    <div class="mt-8" id="test-selection">
+        <h3 class="text-2xl font-semibold mb-4">Available Tests</h3>
+        <div class="">
+            {% for test in tests %}
+                <div class="rounded-lg py-6">
+                    <h4 class="text-xl font-bold">{{ test.name }}</h4>
+                    <p class="text-sm my-2">{{ test.description }}</p>
+                    <p class="text-sm"><strong>Test Year:</strong> {{ test.year }}</p>
+                    <p class="text-sm"><strong>Scientific Paper:</strong> <a href="{{ test.paper_url }}" class="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener noreferrer">{{ test.paper_title }}</a></p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
 {% endblock %}
