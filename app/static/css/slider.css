@@ -1,0 +1,61 @@
+.slider-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+
+.slider-btn {
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.slider-btn:hover {
+    background: rgba(0,0,0,0.8);
+}
+
+.slider-wrapper {
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+.slider-wrapper {
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Added styles for individual slide effects */
+.slider-image {
+    width: 100%; /* Assuming each slide should take the full width of the slider */
+    transition: transform 0.5s ease; /* Transition for smooth sliding effect */
+    display: inline-block; /* Place images in a row */
+    white-space: normal;
+}
+
+/* Updated slider controls to account for wrapper size */
+.slider-controls {
+    position: absolute;
+    top: 50%;
+    left: 0; /* Ensure controls are aligned with the wrapper */
+    right: 0; /* Ensure controls are aligned with the wrapper */
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    pointer-events: none; /* Allows click events to pass through to images if needed */
+}
+
+.slider-btn {
+    pointer-events: auto; /* Re-enable click events for buttons */
+    /* rest of the styles... */
+}
+
+.slider {
+    position: relative; /* Establishes a new positioning context for children */
+    /* Make sure the width of the slider is defined or constrained by its parent element */
+}
