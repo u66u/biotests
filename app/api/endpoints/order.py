@@ -1,13 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from typing import List
 
 from app.models.order import Order
 from app.models.user import User
 from app.schemas.requests import OrderCreateRequest
 from app.schemas.responses import OrderResponse
 from app.api import deps
-
+from datetime import datetime
 
 router = APIRouter()
 
@@ -21,9 +22,12 @@ async def create_order(
     """Create a new order for the current user"""
     order = Order(
         user_id=current_user.id,  # Assign user_id to the current user's ID
-        product_id=order_data.product_id,
+        test_id=order_data.test_id,
         comments=order_data.comments,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
     )
+
     session.add(order)
     await session.commit()
     await session.refresh(order)

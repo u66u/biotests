@@ -1,8 +1,8 @@
-"""biological tests
+"""new user model
 
-Revision ID: bf2073d8a6d8
+Revision ID: a2a599638d91
 Revises: 2530e177d0c6
-Create Date: 2024-03-24 17:15:11.155380
+Create Date: 2024-03-24 19:47:28.644806
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = "bf2073d8a6d8"
+revision = "a2a599638d91"
 down_revision = "2530e177d0c6"
 branch_labels = None
 depends_on = None
@@ -35,7 +35,12 @@ def upgrade():
             server_default=sa.text("now()"),
             nullable=False,
         ),
-        sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
+        sa.Column(
+            "updated_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_index(
@@ -78,7 +83,12 @@ def upgrade():
             server_default=sa.text("now()"),
             nullable=False,
         ),
-        sa.Column("updated_at", sa.DateTime(timezone=True), nullable=False),
+        sa.Column(
+            "updated_at",
+            sa.DateTime(timezone=True),
+            server_default=sa.text("now()"),
+            nullable=False,
+        ),
         sa.ForeignKeyConstraint(
             ["test_id"],
             ["biological_test.id"],

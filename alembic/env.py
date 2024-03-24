@@ -21,11 +21,8 @@ fileConfig(config.config_file_name)  # type: ignore
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from app.models.base import Base  # noqa
-
-from app.models.user import User
-
 from app.models.order import Order
-
+from app.models.all import User
 from app.models.biological_test import BiologicalTest, BloodTest, DNATest  # noqa
 
 target_metadata = Base.metadata

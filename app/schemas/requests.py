@@ -1,5 +1,8 @@
 from pydantic import BaseModel, EmailStr, validator
 from typing import Optional
+from decimal import Decimal
+from datetime import datetime
+from app.models.biological_test import TestType
 
 
 class BaseRequest(BaseModel):
@@ -19,7 +22,6 @@ class UserCreateRequest(BaseRequest):
     email: EmailStr
     password: str
     name: Optional[str]
-    address: Optional[str]
 
 
 class ProductCreateRequest(BaseModel):
@@ -34,7 +36,22 @@ class ProductCreateRequest(BaseModel):
         return value
 
 
+class BloodTestCreateRequest(BaseModel):
+    name: str
+    description: Optional[str]
+    price: Decimal
+    glucose: Optional[float]
+    cholesterol: Optional[float]
+
+
+class DNATestCreateRequest(BaseModel):
+    name: str
+    description: Optional[str]
+    price: Decimal
+    gene1: Optional[str]
+    gene2: Optional[str]
+
+
 class OrderCreateRequest(BaseModel):
-    user_id: str
-    product_id: str
-    comments: Optional[str] = None
+    test_id: str
+    comments: Optional[str]
