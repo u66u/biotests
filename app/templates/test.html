@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "dark.html" %}
 
 {% block title %}
 Test Your Biological Age
@@ -15,10 +15,10 @@ Test Your Biological Age
         <div class="">
             {% for test in tests %}
                 <div class="rounded-lg py-6">
-                    <h4 class="text-xl font-bold">{{ test.name }}</h4>
+                    <h4 class="text-xl font-bold">
+                      <a href="{{ test.url }}" class="text-white hover:text-gray-400" rel="noopener noreferrer">{{ test.name }} ({{ test.year }})</a>
+                    </h4>
                     <p class="text-sm my-2">{{ test.description }}</p>
-                    <p class="text-sm"><strong>Test Year:</strong> {{ test.year }}</p>
-                    <p class="text-sm"><strong>Scientific Paper:</strong> <a href="{{ test.paper_url }}" class="text-blue-600 hover:text-blue-800" target="_blank" rel="noopener noreferrer">{{ test.paper_title }}</a></p>
                 </div>
             {% endfor %}
         </div>
