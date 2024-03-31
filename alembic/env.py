@@ -23,7 +23,11 @@ fileConfig(config.config_file_name)  # type: ignore
 from app.models.base import Base  # noqa
 from app.models.order import Order
 from app.models.user import User
-from app.models.biological_test import BiologicalTest, BloodTest, DNATest  # noqa
+from app.models.biological_test import (
+    BiologicalTest,
+    DNAmPhenoAgeLevine2018Test,
+    BloodMarketBAEstimationTest,
+)  # noqa
 
 target_metadata = Base.metadata
 
