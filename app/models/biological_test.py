@@ -1,4 +1,15 @@
-from sqlalchemy import Enum, DateTime, ForeignKey, func, Float, Text, String, DECIMAL
+from datetime import date
+from sqlalchemy import (
+    Date,
+    Enum,
+    DateTime,
+    ForeignKey,
+    func,
+    Float,
+    Text,
+    String,
+    DECIMAL,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
@@ -7,8 +18,8 @@ from enum import Enum as PyEnum
 
 
 class TestType(PyEnum):
-    BLOOD_TEST = "blood_test"
-    DNA_TEST = "dna_test"
+    DNA_M_PHENO_AGE_LEVINE_TEST = "dna_m_pheno_age_levine_2018_test"
+    BLOODMARKER_BA_ESTIMATION_TEST = "bloodmarker_ba_estimation_test"
 
 
 class BiologicalTest(Base):
@@ -36,25 +47,67 @@ class BiologicalTest(Base):
     }
 
 
-class BloodTest(BiologicalTest):
-    __tablename__ = "blood_test"
+class DNAmPhenoAgeLevine2018Test(BiologicalTest):
+    __tablename__ = "dna_m_pheno_age_levine_2018_test"
 
     id: Mapped[str] = mapped_column(ForeignKey("biological_test.id"), primary_key=True)
+    birthday: Mapped[date] = mapped_column(Date, nullable=False)
+    sex: Mapped[str] = mapped_column(String(1), nullable=False)
+    albumin: Mapped[float] = mapped_column(Float, nullable=True)
+    creatinine: Mapped[float] = mapped_column(Float, nullable=True)
     glucose: Mapped[float] = mapped_column(Float, nullable=True)
-    cholesterol: Mapped[float] = mapped_column(Float, nullable=True)
+    c_reactive_protein: Mapped[float] = mapped_column(Float, nullable=True)
+    lymphocytes_percentage: Mapped[float] = mapped_column(Float, nullable=True)
+    mean_corpuscular_volume: Mapped[float] = mapped_column(Float, nullable=True)
+    red_blood_cell_distribution_width: Mapped[float] = mapped_column(
+        Float, nullable=True
+    )
+    alkaline_phosphatase: Mapped[float] = mapped_column(Float, nullable=True)
+    white_blood_cell_count: Mapped[float] = mapped_column(Float, nullable=True)
+    result: Mapped[float] = mapped_column(Float, nullable=True)
 
-    __mapper_args__ = {
-        "polymorphic_identity": TestType.BLOOD_TEST,
-    }
+    __mapper_args__ = {"polymorphic_identity": TestType.DNA_M_PHENO_AGE_LEVINE_TEST}
 
 
-class DNATest(BiologicalTest):
-    __tablename__ = "dna_test"
+class BloodMarketBAEstimationTest(BiologicalTest):
+    __tablename__ = "bloodmarker_ba_estimation_test"
 
     id: Mapped[str] = mapped_column(ForeignKey("biological_test.id"), primary_key=True)
-    gene1: Mapped[str] = mapped_column(String(50), nullable=True)
-    gene2: Mapped[str] = mapped_column(String(50), nullable=True)
+    birthday: Mapped[date] = mapped_column(Date, nullable=False)
+    sex: Mapped[str] = mapped_column(String(1), nullable=False)
+    albumin: Mapped[float] = mapped_column(Float, nullable=True)
+    alkaline_phosphatase: Mapped[float] = mapped_column(Float, nullable=True)
+    urea: Mapped[float] = mapped_column(Float, nullable=True)
+    cholesterol: Mapped[float] = mapped_column(Float, nullable=True)
+    creatinine: Mapped[float] = mapped_column(Float, nullable=True)
+    cystatin_c: Mapped[float] = mapped_column(Float, nullable=True)
+    glycated_haemoglobin: Mapped[float] = mapped_column(Float, nullable=True)
+    log_c_reactive_protein: Mapped[float] = mapped_column(Float, nullable=True)
+    log_gamma_glutamyltransf: Mapped[float] = mapped_column(Float, nullable=True)
+    red_blood_cell_erythrocyte_count: Mapped[float] = mapped_column(
+        Float, nullable=True
+    )
+    mean_corpuscular_volume: Mapped[float] = mapped_column(Float, nullable=True)
+    red_blood_cell_erythrocyte_distribution_width: Mapped[float] = mapped_column(
+        Float, nullable=True
+    )
+    monocyte_count: Mapped[float] = mapped_column(Float, nullable=True)
+    neutrophill_count: Mapped[float] = mapped_column(Float, nullable=True)
+    lymphocyte_percentage: Mapped[float] = mapped_column(Float, nullable=True)
+    mean_sphered_cell_volume: Mapped[float] = mapped_column(Float, nullable=True)
+    log_alanine_aminotransfe: Mapped[float] = mapped_column(Float, nullable=True)
+    log_shbg: Mapped[float] = mapped_column(Float, nullable=True)
+    log_vitamin_d: Mapped[float] = mapped_column(Float, nullable=True)
+    high_light_scatter_reticulocyte_percentage: Mapped[float] = mapped_column(
+        Float, nullable=True
+    )
+    glucose: Mapped[float] = mapped_column(Float, nullable=True)
+    platelet_distribution_width: Mapped[float] = mapped_column(Float, nullable=True)
+    mean_corpuscular_haemoglobin: Mapped[float] = mapped_column(Float, nullable=True)
+    platelet_crit: Mapped[float] = mapped_column(Float, nullable=True)
+    apolipoprotein_a: Mapped[float] = mapped_column(Float, nullable=True)
+    result: Mapped[float] = mapped_column(Float, nullable=True)
 
     __mapper_args__ = {
-        "polymorphic_identity": TestType.DNA_TEST,
+        "polymorphic_identity": TestType.BLOODMARKER_BA_ESTIMATION_TEST,
     }

@@ -1,8 +1,6 @@
-from decimal import Decimal
 from pydantic import BaseModel, ConfigDict, EmailStr
 from typing import Optional
 from datetime import datetime
-from app.models.biological_test import TestType
 
 
 class BaseResponse(BaseModel):
@@ -26,30 +24,6 @@ class ProductResponse(BaseModel):
     price: float
 
 
-class BloodTestResponse(BaseModel):
-    id: str
-    name: str
-    description: Optional[str]
-    price: Decimal
-    test_type: TestType
-    glucose: Optional[float]
-    cholesterol: Optional[float]
-    created_at: datetime
-    updated_at: datetime
-
-
-class DNATestResponse(BaseModel):
-    id: str
-    name: str
-    description: Optional[str]
-    price: Decimal
-    test_type: TestType
-    gene1: Optional[str]
-    gene2: Optional[str]
-    created_at: datetime
-    updated_at: datetime
-
-
 class OrderResponse(BaseModel):
     id: str
     user_id: str
@@ -63,3 +37,15 @@ class UserResponse(BaseModel):
     id: str
     email: EmailStr
     name: Optional[str]
+
+
+class BloodTestBaseResponse(BaseResponse):
+    user_id: str
+    result: float
+    created_at: datetime
+
+
+class BloodMarketBAEstimationTestResponse(BloodTestBaseResponse): ...
+
+
+class DNAmPhenoAgeLevine2018TestResponse(BloodTestBaseResponse): ...
