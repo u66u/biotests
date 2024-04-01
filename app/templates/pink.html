@@ -2,9 +2,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/static/js/htmx.js"></script>
-    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
     <link rel="stylesheet" href="/static/css/tailwind.css">
+    <script src="/static/js/htmx.js"></script>
+  <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
     <title>{% block title %}About{% endblock %}</title>
     {% block head %}{% endblock %}
 </head>
@@ -17,8 +17,8 @@
                 <h2 class="text-2xl font-bold">{% block header %}...{% endblock %}</h2>
             </div>
         </header>
-            <div id="menu-container" hx-get="/auth/check-token" hx-trigger="load" hx-swap="none" data-text-color="text-emerald-300" data-hover-text-color="hover:text-gray-300">
-                <div id="menu"></div>
+            <div id="menu-container" hx-get="/auth/check-token" hx-trigger="load" hx-swap="none">
+                <div id="menu" data-text-color="text-black" data-hover-text-color="hover:text-sunset-pink"></div>
             </div>
             <script src="/static/js/check_token.js"></script>
         <main>

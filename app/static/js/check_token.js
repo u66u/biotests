@@ -1,7 +1,7 @@
 document.getElementById('menu-container').addEventListener('htmx:afterSwap', function(event) {
     var response = JSON.parse(event.detail.xhr.responseText);
     var menu = document.getElementById('menu');
-    var textColor = menu.getAttribute('data-text-color');
+    var textColor = menu.getAttribute('text-color');
     var hoverTextColor = menu.getAttribute('data-hover-text-color');
 
     var menuItems = `

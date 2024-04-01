@@ -15,6 +15,7 @@ app = FastAPI(
 )
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+app.mount("/js", StaticFiles(directory="app/static/js"), name="js")
 app.include_router(api_router)
 
 # Sets all CORS enabled origins
