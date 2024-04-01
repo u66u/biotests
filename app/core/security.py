@@ -10,6 +10,7 @@ from app.core import config
 from app.schemas.responses import AccessTokenResponse
 
 JWT_ALGORITHM = "HS256"
+JWT_ISSUER = "biotests"
 ACCESS_TOKEN_EXPIRE_SECS = config.settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
 REFRESH_TOKEN_EXPIRE_SECS = config.settings.REFRESH_TOKEN_EXPIRE_MINUTES * 60
 PWD_CONTEXT = CryptContext(

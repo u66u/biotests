@@ -29,7 +29,6 @@ class BiologicalTest(Base):
         UUID(as_uuid=False), primary_key=True, default=lambda _: str(uuid.uuid4())
     )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
-    description: Mapped[str] = mapped_column(Text, nullable=True)
     price: Mapped[DECIMAL] = mapped_column(DECIMAL(10, 2), nullable=False, default=0)
     test_type: Mapped[TestType] = mapped_column(
         Enum(TestType), nullable=False, index=True

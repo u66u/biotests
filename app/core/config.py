@@ -26,7 +26,7 @@ from functools import cached_property
 from pathlib import Path
 from typing import Literal
 
-from pydantic import AnyHttpUrl, EmailStr, PostgresDsn, computed_field
+from pydantic import AnyHttpUrl, EmailStr, PostgresDsn, SecretStr, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 PROJECT_DIR = Path(__file__).parent.parent.parent

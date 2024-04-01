@@ -22,7 +22,7 @@ fileConfig(config.config_file_name)  # type: ignore
 # target_metadata = mymodel.Base.metadata
 from app.models.base import Base  # noqa
 from app.models.order import Order
-from app.models.user import User
+from app.models.user import User, RefreshToken
 from app.models.biological_test import (
     BiologicalTest,
     DNAmPhenoAgeLevine2018Test,

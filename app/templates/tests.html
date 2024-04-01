@@ -7,21 +7,123 @@ Test Your Biological Age
 {% block header %} Free biological age tests for the people!{% endblock %}
 
 {% block content %}
+<button hx-get="/users/me">Me</button>
+<h1>Login Form</h1>
+
+  <form hx-post="/auth/access-token" hx-target="#result">
+    <div>
+      <label for="username">Email:</label>
+      <input type="email" id="username" name="username" required>
+    </div>
+    <div>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
+  </form>
+
+  <div id="result"></div>
+
+  <hr>
+
+  <div id="user-info">
+    <h2>User Information</h2>
+    <div id="user-details"></div>
+  </div>
+
+  <script>
+    // Check if the access token exists in local storage
+    const accessToken = localStorage.getItem('access_token');
+    if (accessToken) {
+      // If the access token exists, make a request to /users/me to get user information
+      fetch('/users/me', {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          const userDetails = document.getElementById('user-details');
+          userDetails.innerHTML = `
+            <p>Name: ${data.name}</p>
+            <p>Email: ${data.email}</p>
+          `;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+    }
+
+    // Listen for the htmx:afterRequest event
+    document.body.addEventListener('htmx:afterRequest', (event) => {
+      if (event.detail.requestConfig.path === '/auth/access-token') {
+        const accessToken = event.detail.response.access_token;
+        // Store the access token in local storage
+        localStorage.setItem('access_token', accessToken);
+      }
+    });
+  </script>
+
 <div class="prose prose-lg max-w-none">
     <p>Welcome to our platform where you can test your biological age using a variety of blood tests. Our service allows you to gain insights into your health and longevity through detailed analysis and comparison with scientific standards.</p>
 
-    <div class="mt-8" id="test-selection">
-        <h3 class="text-2xl font-semibold mb-4">Available Tests</h3>
-        <div class="">
-            {% for test in tests %}
-                <div class="rounded-lg py-6">
-                    <h4 class="text-xl font-bold">
-                      <a href="{{ test.url }}" class="text-white hover:text-gray-400" rel="noopener noreferrer">{{ test.name }} ({{ test.year }})</a>
-                    </h4>
-                    <p class="text-sm my-2">{{ test.description }}</p>
-                </div>
-            {% endfor %}
-        </div>
+<div class="mt-8" id="test-selection">
+    <h3 class="text-2xl font-semibold mb-4">Available Tests</h3>
+    <div>
+        <h4 class="text-xl font-semibold mb-2">DNAm PhenoAge Levine 2018 Test</h4>
+        <form hx-post="/dnam-pheno-age-levine-2018" hx-target="#result">
+            <div class="mb-4">
+                <label for="birthday" class="block mb-2">Birthday:</label>
+                <input type="date" id="birthday" name="birthday" required class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="sex" class="block mb-2">Sex:</label>
+                <select id="sex" name="sex" required class="w-full p-2 border border-gray-300 rounded">
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label for="albumin" class="block mb-2">Albumin:</label>
+                <input type="number" step="0.01" id="albumin" name="albumin" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="creatinine" class="block mb-2">Creatinine:</label>
+                <input type="number" step="0.01" id="creatinine" name="creatinine" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="glucose" class="block mb-2">Glucose:</label>
+                <input type="number" step="0.01" id="glucose" name="glucose" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="c_reactive_protein" class="block mb-2">C-reactive Protein:</label>
+                <input type="number" step="0.01" id="c_reactive_protein" name="c_reactive_protein" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="lymphocytes_percentage" class="block mb-2">Lymphocytes Percentage:</label>
+                <input type="number" step="0.01" id="lymphocytes_percentage" name="lymphocytes_percentage" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="mean_corpuscular_volume" class="block mb-2">Mean Corpuscular Volume:</label>
+                <input type="number" step="0.01" id="mean_corpuscular_volume" name="mean_corpuscular_volume" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="red_blood_cell_distribution_width" class="block mb-2">Red Blood Cell Distribution Width:</label>
+                <input type="number" step="0.01" id="red_blood_cell_distribution_width" name="red_blood_cell_distribution_width" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="alkaline_phosphatase" class="block mb-2">Alkaline Phosphatase:</label>
+                <input type="number" step="0.01" id="alkaline_phosphatase" name="alkaline_phosphatase" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="white_blood_cell_count" class="block mb-2">White Blood Cell Count:</label>
+                <input type="number" step="0.01" id="white_blood_cell_count" name="white_blood_cell_count" class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Submit
+            </button>
+        </form>
+        <div id="result" class="mt-4"></div>
     </div>
 </div>
 {% endblock %}

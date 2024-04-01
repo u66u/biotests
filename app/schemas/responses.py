@@ -17,14 +17,14 @@ class AccessTokenResponse(BaseResponse):
     refresh_token_issued_at: int
 
 
-class ProductResponse(BaseModel):
+class ProductResponse(BaseResponse):
     id: str
     name: str
     description: Optional[str]
     price: float
 
 
-class OrderResponse(BaseModel):
+class OrderResponse(BaseResponse):
     id: str
     user_id: str
     test_id: str
@@ -33,7 +33,7 @@ class OrderResponse(BaseModel):
     updated_at: datetime
 
 
-class UserResponse(BaseModel):
+class UserResponse(BaseResponse):
     id: str
     email: EmailStr
     name: Optional[str]

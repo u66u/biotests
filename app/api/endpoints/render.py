@@ -5,6 +5,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.responses import HTMLResponse
 from sqlalchemy.orm import Session
 from app.schemas.data import tests
+import app.api.deps as deps
 
 router = APIRouter()
 
@@ -22,7 +23,8 @@ async def index(request: Request):
 @router.get("/tests", response_class=HTMLResponse)
 async def render_test(request: Request):
     return templates.TemplateResponse(
-        "tests.html", {"request": request, "tests": tests}
+        "tests.html",
+        {"request": request, "tests": tests, "user": deps.get_current_user},
     )
 
 

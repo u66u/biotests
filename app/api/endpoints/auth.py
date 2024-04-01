@@ -1,6 +1,6 @@
 import time
 import jwt
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import ValidationError
 from sqlalchemy import select
@@ -17,6 +17,7 @@ router = APIRouter()
 
 @router.post("/access-token", response_model=AccessTokenResponse)
 async def login_access_token(
+    response: Response,
     session: AsyncSession = Depends(deps.get_session),
     form_data: OAuth2PasswordRequestForm = Depends(),
 ):
@@ -31,19 +32,24 @@ async def login_access_token(
     if not security.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect email or password")
 
-    return security.generate_access_token_response(str(user.id))
+    token = security.generate_access_token_response(str(user.id))
+    response.set_cookie(key="access_token", value=token.access_token, httponly=True)
+    response.set_cookie(key="refresh_token", value=token.refresh_token, httponly=True)
+
+    return token
 
 
 @router.post("/refresh-token", response_model=AccessTokenResponse)
 async def refresh_token(
     input: RefreshTokenRequest,
+    response: Response,
     session: AsyncSession = Depends(deps.get_session),
 ):
     """OAuth2 compatible token, get an access token for future requests using refresh token"""
     try:
         payload = jwt.decode(
             input.refresh_token,
-            config.settings.SECRET_KEY,
+            config.Settings.SECRET_KEY,
             algorithms=[security.JWT_ALGORITHM],
         )
     except (jwt.DecodeError, ValidationError):
@@ -73,4 +79,8 @@ async def refresh_token(
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
 
-    return security.generate_access_token_response(str(user.id))
+    token = security.generate_access_token_response(str(user.id))
+    response.set_cookie(key="access_token", value=token.access_token, httponly=True)
+    response.set_cookie(key="refresh_token", value=token.refresh_token, httponly=True)
+
+    return token

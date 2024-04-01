@@ -5,9 +5,7 @@ from datetime import datetime, date
 from app.models.biological_test import TestType
 
 
-class BaseRequest(BaseModel):
-    # may define additional fields or config shared across requests
-    pass
+class BaseRequest(BaseModel): ...
 
 
 class RefreshTokenRequest(BaseRequest):
@@ -34,14 +32,6 @@ class ProductCreateRequest(BaseRequest):
         if value < 0:
             raise ValueError("Price must be a positive number.")
         return value
-
-
-class BloodTestCreateRequest(BaseRequest):
-    name: str
-    description: Optional[str]
-    price: Decimal
-    glucose: Optional[float]
-    cholesterol: Optional[float]
 
 
 class OrderCreateRequest(BaseRequest):
