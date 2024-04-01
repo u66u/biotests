@@ -28,6 +28,26 @@ async def render_test(request: Request):
     )
 
 
-@router.get("/kit", response_class=HTMLResponse)
-async def render_kit(request: Request):
-    return templates.TemplateResponse("kit.html", {"request": request})
+@router.get("/about", response_class=HTMLResponse)
+async def render_about(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
+
+
+@router.get("/login", response_class=HTMLResponse)
+async def render_login(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+
+@router.get("/forgot-password", response_class=HTMLResponse)
+async def render_forgot_password(request: Request):
+    return templates.TemplateResponse("forgot_password.html", {"request": request})
+
+
+@router.get("/logout", response_class=HTMLResponse)
+async def render_logout(request: Request):
+    return templates.TemplateResponse("logout.html", {"request": request})
+
+
+@router.get("/profile", response_class=HTMLResponse)
+async def render_profile(request: Request):
+    return templates.TemplateResponse("profile.html", {"request": request})

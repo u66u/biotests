@@ -27,7 +27,7 @@ async def get_tests():
 async def create_dnam_pheno_age_levine_2018_test(
     test_data: DNAmPhenoAgeLevine2018TestRequest,
     session: AsyncSession = Depends(deps.get_session),
-    current_user: User = Depends(deps.get_current_user),
+    current_user: User = Depends(deps.get_current_user_cookies),
 ):
     result = calculate_dnam_pheno_age_levine_2018(test_data)
 

@@ -7,63 +7,6 @@ Test Your Biological Age
 {% block header %} Free biological age tests for the people!{% endblock %}
 
 {% block content %}
-<button hx-get="/users/me">Me</button>
-<h1>Login Form</h1>
-
-  <form hx-post="/auth/access-token" hx-target="#result">
-    <div>
-      <label for="username">Email:</label>
-      <input type="email" id="username" name="username" required>
-    </div>
-    <div>
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
-    </div>
-    <button type="submit">Login</button>
-  </form>
-
-  <div id="result"></div>
-
-  <hr>
-
-  <div id="user-info">
-    <h2>User Information</h2>
-    <div id="user-details"></div>
-  </div>
-
-  <script>
-    // Check if the access token exists in local storage
-    const accessToken = localStorage.getItem('access_token');
-    if (accessToken) {
-      // If the access token exists, make a request to /users/me to get user information
-      fetch('/users/me', {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
-      })
-        .then(response => response.json())
-        .then(data => {
-          const userDetails = document.getElementById('user-details');
-          userDetails.innerHTML = `
-            <p>Name: ${data.name}</p>
-            <p>Email: ${data.email}</p>
-          `;
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    }
-
-    // Listen for the htmx:afterRequest event
-    document.body.addEventListener('htmx:afterRequest', (event) => {
-      if (event.detail.requestConfig.path === '/auth/access-token') {
-        const accessToken = event.detail.response.access_token;
-        // Store the access token in local storage
-        localStorage.setItem('access_token', accessToken);
-      }
-    });
-  </script>
-
 <div class="prose prose-lg max-w-none">
     <p>Welcome to our platform where you can test your biological age using a variety of blood tests. Our service allows you to gain insights into your health and longevity through detailed analysis and comparison with scientific standards.</p>
 
@@ -71,7 +14,7 @@ Test Your Biological Age
     <h3 class="text-2xl font-semibold mb-4">Available Tests</h3>
     <div>
         <h4 class="text-xl font-semibold mb-2">DNAm PhenoAge Levine 2018 Test</h4>
-        <form hx-post="/dnam-pheno-age-levine-2018" hx-target="#result">
+        <form hx-post="/tests/dnam-pheno-age-levine-2018" hx-target="#result" hx-ext="json-enc" hx-swap="innerHTML">
             <div class="mb-4">
                 <label for="birthday" class="block mb-2">Birthday:</label>
                 <input type="date" id="birthday" name="birthday" required class="w-full p-2 border border-gray-300 rounded">
