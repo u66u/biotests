@@ -32,6 +32,7 @@ async def login_access_token(
     if not security.verify_password(form_data.password, user.hashed_password):
         raise HTTPException(status_code=400, detail="Incorrect email or password")
 
+    # generate access token and store it in cookies
     token = security.generate_access_token_response(str(user.id))
     deps.set_token_cookies(response, token)
 
