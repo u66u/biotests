@@ -29,7 +29,7 @@ async def create_dnam_pheno_age_levine_2018_test(
     session: AsyncSession = Depends(deps.get_session),
     current_user: User = Depends(deps.get_current_user_cookies),
 ):
-    result = calculate_dnam_pheno_age_levine_2018(test_data)
+    result = calculate_dnam_pheno_age_levine_2018(test_data)["DNAmAge"]
 
     test_record = DNAmPhenoAgeLevine2018Test(
         name="DNAmPhenoAgeLevine2018",

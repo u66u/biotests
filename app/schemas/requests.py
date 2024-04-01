@@ -45,40 +45,40 @@ class BloodTestBaseRequest(BaseRequest):
 
 
 class BloodMarketBAEstimationTestCreateRequest(BloodTestBaseRequest):
-    albumin: Optional[float]
-    alkaline_phosphatase: Optional[float]
-    urea: Optional[float]
-    cholesterol: Optional[float]
-    creatinine: Optional[float]
-    cystatin_c: Optional[float]
-    glycated_haemoglobin: Optional[float]
-    log_c_reactive_protein: Optional[float]
-    log_gamma_glutamyltransf: Optional[float]
-    red_blood_cell_erythrocyte_count: Optional[float]
-    mean_corpuscular_volume: Optional[float]
-    red_blood_cell_erythrocyte_distribution_width: Optional[float]
-    monocyte_count: Optional[float]
-    neutrophill_count: Optional[float]
-    lymphocyte_percentage: Optional[float]
-    mean_sphered_cell_volume: Optional[float]
-    log_alanine_aminotransfe: Optional[float]
-    log_shbg: Optional[float]
-    log_vitamin_d: Optional[float]
-    high_light_scatter_reticulocyte_percentage: Optional[float]
-    glucose: Optional[float]
-    platelet_distribution_width: Optional[float]
-    mean_corpuscular_haemoglobin: Optional[float]
-    platelet_crit: Optional[float]
-    apolipoprotein_a: Optional[float]
+    albumin: float
+    alkaline_phosphatase: float
+    urea: float
+    cholesterol: float
+    creatinine: float
+    cystatin_c: float
+    glycated_haemoglobin: float
+    log_c_reactive_protein: float
+    log_gamma_glutamyltransf: float
+    red_blood_cell_erythrocyte_count: float
+    mean_corpuscular_volume: float
+    red_blood_cell_erythrocyte_distribution_width: float
+    monocyte_count: float
+    neutrophill_count: float
+    lymphocyte_percentage: float
+    mean_sphered_cell_volume: float
+    log_alanine_aminotransfe: float
+    log_shbg: float
+    log_vitamin_d: float
+    high_light_scatter_reticulocyte_percentage: float
+    glucose: float
+    platelet_distribution_width: float
+    mean_corpuscular_haemoglobin: float
+    platelet_crit: float
+    apolipoprotein_a: float
 
 
 class DNAmPhenoAgeLevine2018TestRequest(BloodTestBaseRequest):
-    albumin: Optional[float]
-    creatinine: Optional[float]
-    glucose: Optional[float]
-    c_reactive_protein: Optional[float]
-    lymphocytes_percentage: Optional[float]
-    mean_corpuscular_volume: Optional[float]
-    red_blood_cell_distribution_width: Optional[float]
-    alkaline_phosphatase: Optional[float]
-    white_blood_cell_count: Optional[float]
+    albumin: float
+    creatinine: float
+    glucose: float
+    c_reactive_protein: float
+    lymphocytes_percentage: float
+    mean_corpuscular_volume: float
+    red_blood_cell_distribution_width: float
+    alkaline_phosphatase: float
+    white_blood_cell_count: float

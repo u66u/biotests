@@ -1,9 +1,9 @@
 tests = [
     {
-        "name": "Telomere Length Test",
-        "url": "https://example.com/test/telomere-length",
+        "name": "PhenoAGE",
+        "url": "/tests/phenoage-2018",
         "description": "Assesses the length of telomere sequences.",
-        "year": "2023",
+        "year": "2018",
         "paper_url": "https://example.com/paper/telomere-length",
         "paper_title": "Telomere Length as a Biomarker",
     },

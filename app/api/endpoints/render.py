@@ -20,14 +20,6 @@ async def index(request: Request):
     )
 
 
-@router.get("/tests", response_class=HTMLResponse)
-async def render_test(request: Request):
-    return templates.TemplateResponse(
-        "tests.html",
-        {"request": request, "tests": tests, "user": deps.get_current_user},
-    )
-
-
 @router.get("/about", response_class=HTMLResponse)
 async def render_about(request: Request):
     return templates.TemplateResponse("about.html", {"request": request})
@@ -51,3 +43,15 @@ async def render_logout(request: Request):
 @router.get("/profile", response_class=HTMLResponse)
 async def render_profile(request: Request):
     return templates.TemplateResponse("profile.html", {"request": request})
+
+
+@router.get("/tests", response_class=HTMLResponse)
+async def render_tests(request: Request):
+    return templates.TemplateResponse(
+        "tests/index.html", {"request": request, "tests": tests}
+    )
+
+
+@router.get("/tests/phenoage-2018", response_class=HTMLResponse)
+async def render_test_phenoage2018(request: Request):
+    return templates.TemplateResponse("tests/phenoage-2018.html", {"request": request})
