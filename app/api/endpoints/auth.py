@@ -33,8 +33,7 @@ async def login_access_token(
         raise HTTPException(status_code=400, detail="Incorrect email or password")
 
     token = security.generate_access_token_response(str(user.id))
-    response.set_cookie(key="access_token", value=token.access_token, httponly=True)
-    response.set_cookie(key="refresh_token", value=token.refresh_token, httponly=True)
+    deps.set_token_cookies(response, token)
 
     return token
 
@@ -80,7 +79,6 @@ async def refresh_token(
         raise HTTPException(status_code=404, detail="User not found")
 
     token = security.generate_access_token_response(str(user.id))
-    response.set_cookie(key="access_token", value=token.access_token, httponly=True)
-    response.set_cookie(key="refresh_token", value=token.refresh_token, httponly=True)
+    deps.set_token_cookies(response, token)
 
     return token

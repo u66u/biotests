@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     # CORE SETTINGS
     SECRET_KEY: str
     YOOMONEY_ACCESS_TOKEN: str
-    ENVIRONMENT: Literal["DEV", "PYTEST", "STG", "PRD"] = "DEV"
+    ENVIRONMENT: Literal["DEV", "PYTEST", "STG", "PRODUCTION"] = "DEV"
     SECURITY_BCRYPT_ROUNDS: int = 12
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 11520  # 8 days
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 40320  # 28 days

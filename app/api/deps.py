@@ -1,9 +1,7 @@
 import time
 from collections.abc import AsyncGenerator
-from typing import Annotated
-
 import jwt
-from fastapi import Depends, HTTPException, Request, status
+from fastapi import Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -11,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import config, security
 from app.core.session import async_session
 from app.models.user import User
+from app.schemas.responses import AccessTokenResponse
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="auth/access-token")
 
@@ -78,7 +77,6 @@ async def get_current_user_cookies(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Could not validate credentials.",
         )
-    # JWT guarantees payload will be unchanged (and thus valid), no errors here
     token_data = security.JWTTokenPayload(**payload)
 
     if token_data.refresh:
@@ -99,3 +97,22 @@ async def get_current_user_cookies(
     if not user:
         raise HTTPException(status_code=404, detail="User not found.")
     return user
+
+
+def set_token_cookies(response: Response, token: AccessTokenResponse):
+    response.set_cookie(
+        key="access_token",
+        value=token.access_token,
+        httponly=True,
+        max_age=token.expires_at - token.issued_at,
+        expires=token.expires_at,
+        # secure=True
+    )
+    response.set_cookie(
+        key="refresh_token",
+        value=token.refresh_token,
+        httponly=True,
+        max_age=token.refresh_token_expires_at - token.refresh_token_issued_at,
+        expires=token.refresh_token_expires_at,
+        # secure=True,
+    )
