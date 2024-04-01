@@ -9,34 +9,26 @@
 </head>
 
 <body class="bg-neutral-900 text-emerald-300">
-    <div class="container mx-auto px-4 py-8 w-11/12 md:w-7/12">
-        <header class="mb-4">
-            <div class="flex items-center mb-4">
-                <div class="my-14 mr-4 text-black/50 h-8 w-8 flex items-center justify-center bg-gray-600 rounded-full">■</div>
-                <h2 class="text-2xl font-bold">{% block header %}{% endblock %}</h2>
-            </div>
-        </header>
-        <!-- <nav class="text-sm mb-8"> -->
-        <!--     <ul class="flex justify-start space-x-4"> -->
-        <!--         <li><a href="/" class="text-orange-400 hover:text-sunset-pink text-lg">Home</a></li> -->
-        <!--         <li class="hidden sm:inline">·</li> -->
-        <!--         <li><a href="/about" class="text-orange-400 hover:text-sunset-pink text-lg">About</a></li> -->
-        <!--         <li class="hidden sm:inline">·</li> -->
-        <!--         <li><a href="/services" class="text-orange-400 hover:text-sunset-pink text-lg">Services</a></li> -->
-        <!--         <li class="hidden sm:inline">·</li> -->
-        <!--         <li><a href="/contact" class="text-orange-400 hover:text-sunset-pink text-lg">Contact</a></li> -->
-        <!--     </ul> -->
-        <!-- </nav> -->
-        <main>
-            {% block content %}{% endblock %}
-        </main>
-        <footer class="mt-8">
-            {% block footer %}
-            <p>&copy; {{ current_year }} Your Company Name. All rights reserved.</p>
-            {% endblock %}
-        </footer>
-    </div>
-    {% block scripts %}{% endblock %}
-</body>
+   <div class="container mx-auto px-4 py-8 w-11/12 md:w-7/12">
+       <header class="mb-4">
+           <div class="flex items-center mb-4">
+               <div class="my-14 mr-4 text-white/50 h-8 w-8 flex items-center justify-center bg-gray-600 rounded-full">■</div>
+               <h2 class="text-2xl font-bold">{% block header %}{% endblock %}</h2>
+           </div>
+           <div hx-get="/auth/check-token" id="menu" hx-trigger="load" hx-swap="none" data-text-color="text-emerald-300" data-hover-text-color="hover:text-gray-300">
+           </div>
+           <script src="/static/js/check_token.js"></script>
+       </header>
+       <main>
+           {% block content %}{% endblock %}
+       </main>
+       <footer class="mt-8">
+           {% block footer %}
+           <p>&copy; {{ current_year }} Your Company Name. All rights reserved.</p>
+           {% endblock %}
+       </footer>
+   </div>
+   {% block scripts %}
+   {% endblock %}
 
 </html>

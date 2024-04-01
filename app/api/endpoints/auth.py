@@ -1,6 +1,6 @@
 import time
 import jwt
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import ValidationError
 from sqlalchemy import select
@@ -49,7 +49,7 @@ async def refresh_token(
     try:
         payload = jwt.decode(
             input.refresh_token,
-            config.Settings.SECRET_KEY,
+            config.settings.SECRET_KEY,
             algorithms=[security.JWT_ALGORITHM],
         )
     except (jwt.DecodeError, ValidationError):
@@ -83,3 +83,48 @@ async def refresh_token(
     deps.set_token_cookies(response, token)
 
     return token
+
+
+@router.get("/check-token")
+async def check_token(
+    request: Request,
+    response: Response,
+):
+    access_token = request.cookies.get("access_token")
+    if access_token:
+        try:
+            payload = jwt.decode(
+                access_token,
+                config.settings.SECRET_KEY,
+                algorithms=[security.JWT_ALGORITHM],
+            )
+            token_data = security.JWTTokenPayload(**payload)
+            expires_at = token_data.expires_at
+            current_time = int(time.time())
+
+            if current_time < expires_at - 300:  # 5 minutes
+                return {"valid": True}
+        except (jwt.DecodeError, ValidationError):
+            pass
+
+    refresh_token = request.cookies.get("refresh_token")
+    if refresh_token:
+        try:
+            payload = jwt.decode(
+                refresh_token,
+                config.settings.SECRET_KEY,
+                algorithms=[security.JWT_ALGORITHM],
+            )
+            token_data = security.JWTTokenPayload(**payload)
+            expires_at = token_data.expires_at
+            current_time = int(time.time())
+
+            if current_time < expires_at:
+                # Refresh token is valid, generate new tokens
+                token = security.generate_access_token_response(str(token_data.sub))
+                deps.set_token_cookies(response, token)
+                return {"valid": True, "refreshed": True}
+        except (jwt.DecodeError, ValidationError):
+            pass
+
+    return {"valid": False}
