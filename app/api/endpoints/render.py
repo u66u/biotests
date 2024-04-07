@@ -5,7 +5,11 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.responses import HTMLResponse
 from sqlalchemy.orm import Session
-from app.schemas.data import tests, ba_estimation_test_fields
+from app.schemas.data import (
+    tests,
+    ba_estimation_test_fields,
+    dnam_pheno_age_levine2018_test_fields,
+)
 import app.api.deps as deps
 
 router = APIRouter()
@@ -55,7 +59,10 @@ async def render_tests(request: Request):
 
 @router.get("/tests/phenoage-2018", response_class=HTMLResponse)
 async def render_test_phenoage2018(request: Request):
-    return templates.TemplateResponse("tests/phenoage-2018.html", {"request": request})
+    return templates.TemplateResponse(
+        "tests/phenoage-2018.html",
+        {"request": request, "model_fields": dnam_pheno_age_levine2018_test_fields},
+    )
 
 
 @router.get("/tests/ba-estimation", response_class=HTMLResponse)

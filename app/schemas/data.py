@@ -7,6 +7,20 @@ class FieldInfo(NamedTuple):
     input_type: str
 
 
+dnam_pheno_age_levine2018_test_fields = {
+    "albumin": FieldInfo("Albumin", "g/dL", "number"),
+    "creatinine": FieldInfo("Creatinine", "mg/dL", "number"),
+    "glucose": FieldInfo("Glucose", "mg/dL", "number"),
+    "c_reactive_protein": FieldInfo("C-Reactive Protein", "mg/L", "number"),
+    "lymphocytes_percentage": FieldInfo("Lymphocytes Percentage", "%", "number"),
+    "mean_corpuscular_volume": FieldInfo("Mean Corpuscular Volume", "fL", "number"),
+    "red_blood_cell_distribution_width": FieldInfo(
+        "Red Blood Cell Distribution Width", "%", "number"
+    ),
+    "alkaline_phosphatase": FieldInfo("Alkaline Phosphatase", "U/L", "number"),
+    "white_blood_cell_count": FieldInfo("White Blood Cell Count", "10^9/L", "number"),
+}
+
 ba_estimation_test_fields = {
     "albumin": FieldInfo("Albumin", "g/dL", "number"),
     "alkaline_phosphatase": FieldInfo("Alkaline Phosphatase", "U/L", "number"),
@@ -53,25 +67,17 @@ tests = [
     {
         "name": "PhenoAGE",
         "url": "/tests/phenoage-2018",
-        "description": "Assesses the length of telomere sequences.",
+        "description": "PhenoAge is a biological age estimate derived from a linear combination of chronological age and 9 blood biomarkers that were selected and weighted based on their ability to predict mortality in a large dataset using a Cox penalized regression survival model.",
         "year": "2018",
-        "paper_url": "https://example.com/paper/telomere-length",
-        "paper_title": "Telomere Length as a Biomarker",
+        "paper_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5940111/",
+        "paper_title": "An epigenetic biomarker of aging for lifespan and healthspan",
     },
     {
         "name": "Blood Marker BA Estimation Test",
         "url": "tests/ba-estimation",
-        "description": "Measures the level of CRP to assess inflammation.",
-        "year": "2021",
-        "paper_url": "https://example.com/paper/crp-levels",
-        "paper_title": "Inflammatory Markers and Aging",
-    },
-    {
-        "name": "Blood Glucose Test",
-        "url": "https://example.com/test/telomere-length",
-        "description": "Evaluates fasting blood sugar levels to gauge insulin resistance.",
-        "year": "2022",
-        "paper_url": "https://example.com/paper/blood-glucose",
-        "paper_title": "Glucose Metabolism in Aging",
+        "description": "This test builds on PhenoAGE, using 25 blood biomarkers and a more precise model, with a dataset of 500,000 participants. It is still relatively accessible, since most labs do test for necessary biomarkers",
+        "year": "2023",
+        "paper_url": "https://www.nature.com/articles/s42003-023-05456-z",
+        "paper_title": "Biological age estimation using circulating blood biomarkers ",
     },
 ]

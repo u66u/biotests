@@ -8,7 +8,7 @@ Blood Market BA Estimation Test
 
 {% block content %}
 <div class="prose prose-lg max-w-none">
-    <p>Welcome to our platform where you can test your biological age using the Blood Market BA Estimation Test. Our service allows you to gain insights into your health and longevity through detailed analysis and comparison with scientific standards.</p>
+    <p>This study behind this test aimed to develop an improved biological age estimator using machine learning models trained on a large dataset of blood biomarker measurements and mortality data from over 300,000 UK Biobank participants. A feature set of 25 blood biomarkers was selected using an Elastic-Net penalized Cox proportional hazards model. Biological age was then calculated as the chronological age of a same-sex individual with equivalent mortality risk based on the selected biomarkers. The resulting biological age acceleration (BAA) values, representing the difference between biological and chronological age, ranged from 20 years younger to 20 years older than participants' actual ages. The model's predictive performance was evaluated using Harrell's concordance index (C-index) and compared favorably to existing biological age predictors like PhenoAge. Notably, cystatin C was identified as the most important single biomarker. The study also demonstrated that using common clinical assay panels with fewer biomarkers alongside imputation did not substantially reduce predictive accuracy compared to the full model. In addition to the C-Index on the full test set, the model's performance was validated in clinically relevant subgroups, socioeconomic strata, and same-age bands.</p>
 
 <div class="mt-8" id="test-selection">
     <h3 class="text-2xl font-semibold mb-4">Blood Market BA Estimation Test</h3>
@@ -28,7 +28,7 @@ Blood Market BA Estimation Test
             {% for field_name, info in model_fields.items() %}
             <div class="mb-4">
               <label for="{{ field_name }}">{{ info.label }} ({{ info.unit }})</label>
-              <input type="{{ info.input_type }}" step="0.00000001" id="{{ field_name }}" name="{{ field_name }}" required>
+              <input class="w-full p-2 border border-gray-300 rounded" type="{{ info.input_type }}" step="0.00000001" id="{{ field_name }}" name="{{ field_name }}" required>
             </div>
             {% endfor %}
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
