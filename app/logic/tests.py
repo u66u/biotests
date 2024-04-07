@@ -1,11 +1,11 @@
-from app.schemas.requests import DNAmPhenoAgeLevine2018TestRequest
-from decimal import Decimal
+import os
+import pandas as pd
+from app.schemas.requests import (
+    BloodMarketBAEstimationTestCreateRequest,
+    DNAmPhenoAgeLevine2018TestRequest,
+)
 import math
-from datetime import date
-
-
-import math
-from datetime import date
+from datetime import date, datetime
 
 
 def calculate_dnam_pheno_age_levine_2018(test_data: DNAmPhenoAgeLevine2018TestRequest):
@@ -60,7 +60,7 @@ def calculate_dnam_pheno_age_levine_2018(test_data: DNAmPhenoAgeLevine2018TestRe
     )
 
     g = 0.0076927
-    age_delta = 120
+    age_delta = 120  # 10 years
 
     mortality_score_10_years = 1 - math.exp(
         -math.exp(linear_combination) * (math.exp(g * age_delta) - 1) / g
@@ -80,3 +80,41 @@ def calculate_dnam_pheno_age_levine_2018(test_data: DNAmPhenoAgeLevine2018TestRe
         "DNAmAge": DNAmAge,
         "D_Mscore": D_Mscore,
     }
+
+
+def calculate_blood_market_ba_estimation(
+    test_data: BloodMarketBAEstimationTestCreateRequest,
+):
+    dir = os.path.dirname(os.path.abspath(__file__))
+    csv_file_path = os.path.join(dir, "data/bloodmarker_ba_coefficients_and_means.csv")
+
+    data_dict = test_data.model_dump()
+    birthday = data_dict["birthday"]
+    del data_dict["sex"]  # Sex is not used in the BAA calculation
+    sample_df = pd.DataFrame([data_dict])
+
+    model_data = pd.read_csv(csv_file_path)
+
+    # Calculate age
+    current_date = datetime.now().date()
+    birth_date = datetime.strptime(str(birthday), "%Y-%m-%d").date()
+    age = current_date.year - birth_date.year
+    if (current_date.month, current_date.day) < (birth_date.month, birth_date.day):
+        age -= 1
+
+    sample_df["age"] = age
+
+    # Filter out 'sexM' from the model data
+    model_data_adj = model_data[model_data["feature"] != "sexM"].copy()
+    model_data_adj["BAA_coefficient"] = (
+        model_data_adj["coefficient_ENET"] - model_data_adj["coefficient_SexAge"]
+    )
+
+    # Join model data with sample data on 'feature'
+    sample_df_melted = sample_df.melt(var_name="feature")
+    joined_data = pd.merge(sample_df_melted, model_data_adj, on="feature")
+    joined_data["centeredValue"] = joined_data["value"] - joined_data["featureMean"]
+
+    BAA = sum(joined_data["centeredValue"] * joined_data["BAA_coefficient"]) * 10
+
+    return BAA

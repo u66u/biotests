@@ -1,0 +1,44 @@
+{% extends "dark.html" %}
+
+{% block title %}
+Blood Market BA Estimation Test
+{% endblock %}
+
+{% block header %} Free biological age tests for the people!{% endblock %}
+
+{% block content %}
+<div class="prose prose-lg max-w-none">
+    <p>Welcome to our platform where you can test your biological age using the Blood Market BA Estimation Test. Our service allows you to gain insights into your health and longevity through detailed analysis and comparison with scientific standards.</p>
+
+<div class="mt-8" id="test-selection">
+    <h3 class="text-2xl font-semibold mb-4">Blood Market BA Estimation Test</h3>
+    <div>
+        <form hx-post="/tests/blood-marker-ba-estimation" hx-target="#result" hx-ext="json-enc" hx-swap="innerHTML">
+            <div class="mb-4">
+                <label for="birthday" class="block mb-2">Birthday:</label>
+                <input type="date" id="birthday" name="birthday" required class="w-full p-2 border border-gray-300 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="sex" class="block mb-2">Sex:</label>
+                <select id="sex" name="sex" required class="w-full p-2 border border-gray-300 rounded">
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+            </div>
+            {% for field_name, info in model_fields.items() %}
+            <div class="mb-4">
+              <label for="{{ field_name }}">{{ info.label }} ({{ info.unit }})</label>
+              <input type="{{ info.input_type }}" step="0.00000001" id="{{ field_name }}" name="{{ field_name }}" required>
+            </div>
+            {% endfor %}
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Submit
+            </button>
+        </form>
+        <div id="result" class="mt-4"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
