@@ -2,6 +2,7 @@ import time
 from collections.abc import AsyncGenerator
 from typing import Optional
 import jwt
+import os
 from fastapi import Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy import select
@@ -60,6 +61,7 @@ async def get_current_user(
 async def get_current_user_cookies(
     request: Request, session: AsyncSession = Depends(get_session)
 ) -> User:
+    """Reads auth token from cookies, throws an error if not found"""
     token = request.cookies.get("access_token")
 
     if not token:
@@ -103,6 +105,7 @@ async def get_current_user_cookies(
 async def get_current_user_cookies_optional(
     request: Request, session: AsyncSession = Depends(get_session)
 ) -> Optional[User]:
+    """Reads auth token from cookies, returns None if not found, doesn't throw an error"""
     token = request.cookies.get("access_token")
 
     if not token:
@@ -139,7 +142,7 @@ def set_token_cookies(response: Response, token: AccessTokenResponse):
         httponly=True,
         max_age=token.expires_at - token.issued_at,
         expires=token.expires_at,
-        # secure=True
+        secure=True
     )
     response.set_cookie(
         key="refresh_token",
@@ -147,5 +150,5 @@ def set_token_cookies(response: Response, token: AccessTokenResponse):
         httponly=True,
         max_age=token.refresh_token_expires_at - token.refresh_token_issued_at,
         expires=token.refresh_token_expires_at,
-        # secure=True,
+        secure=True
     )
