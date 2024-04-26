@@ -40,7 +40,7 @@ class UserResponse(BaseResponse):
 
 
 class BloodTestBaseResponse(BaseResponse):
-    user_id: str
+    user_id: Optional[str]
     result: float
     created_at: datetime
 

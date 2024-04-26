@@ -1,16 +1,19 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from datetime import datetime
 
+from app.api import deps
 from app.logic.tests import (
     calculate_blood_market_ba_estimation,
     calculate_dnam_pheno_age_levine_2018,
 )
-from app.models.user import User
 from app.models.biological_test import (
     BloodMarketBAEstimationTest,
     DNAmPhenoAgeLevine2018Test,
 )
+from app.models.user import User
+from app.schemas.data import tests
 from app.schemas.requests import (
     BloodMarketBAEstimationTestCreateRequest,
     DNAmPhenoAgeLevine2018TestRequest,
@@ -19,9 +22,6 @@ from app.schemas.responses import (
     BloodMarketBAEstimationTestResponse,
     DNAmPhenoAgeLevine2018TestResponse,
 )
-from app.schemas.data import tests
-from app.api import deps
-
 
 router = APIRouter()
 
@@ -31,18 +31,26 @@ async def get_tests():
     return tests
 
 
+@router.get("/my")
+async def get_user_tests(
+    current_user: User = Depends(deps.get_current_user_cookies),
+):
+    return current_user.tests
+
+
 @router.post(
     "/dnam-pheno-age-levine-2018", response_model=DNAmPhenoAgeLevine2018TestResponse
 )
 async def create_dnam_pheno_age_levine_2018_test(
     test_data: DNAmPhenoAgeLevine2018TestRequest,
     session: AsyncSession = Depends(deps.get_session),
-    current_user: User = Depends(deps.get_current_user_cookies),
+    current_user: Optional[User] = Depends(deps.get_current_user_cookies_optional),
 ):
     result = calculate_dnam_pheno_age_levine_2018(test_data)["DNAmAge"]
 
     test_record = DNAmPhenoAgeLevine2018Test(
         name="DNAmPhenoAgeLevine2018",
+        user_id=current_user.id if current_user else None,
         price=0.0,
         result=result,
         birthday=test_data.birthday,
@@ -62,7 +70,7 @@ async def create_dnam_pheno_age_levine_2018_test(
     await session.refresh(test_record)
 
     return DNAmPhenoAgeLevine2018TestResponse(
-        user_id=current_user.id,
+        user_id=current_user.id if current_user else None,
         result=test_record.result,
         created_at=test_record.created_at,
     )
@@ -74,12 +82,13 @@ async def create_dnam_pheno_age_levine_2018_test(
 async def create_blood_market_ba_estimation_test(
     test_data: BloodMarketBAEstimationTestCreateRequest,
     session: AsyncSession = Depends(deps.get_session),
-    current_user: User = Depends(deps.get_current_user_cookies),
+    current_user: Optional[User] = Depends(deps.get_current_user_cookies_optional),
 ):
     result = calculate_blood_market_ba_estimation(test_data)
 
     test_record = BloodMarketBAEstimationTest(
         name="BloodMarketBAEstimationTest",
+        user_id=current_user.id if current_user else None,
         price=0.0,
         result=result,
         birthday=test_data.birthday,
@@ -115,7 +124,7 @@ async def create_blood_market_ba_estimation_test(
     await session.refresh(test_record)
 
     return BloodMarketBAEstimationTestResponse(
-        user_id=current_user.id,
+        user_id=current_user.id if current_user else None,
         result=test_record.result,
         created_at=test_record.created_at,
     )

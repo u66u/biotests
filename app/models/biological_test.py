@@ -10,7 +10,7 @@ from sqlalchemy import (
     String,
     DECIMAL,
 )
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from app.models.base import Base
@@ -28,6 +28,9 @@ class BiologicalTest(Base):
     id: Mapped[str] = mapped_column(
         UUID(as_uuid=False), primary_key=True, default=lambda _: str(uuid.uuid4())
     )
+    user_id: Mapped[str] = mapped_column(
+        UUID(as_uuid=False), ForeignKey("user.id"), nullable=True, index=True
+    )
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     price: Mapped[DECIMAL] = mapped_column(DECIMAL(10, 2), nullable=False, default=0)
     test_type: Mapped[TestType] = mapped_column(
@@ -40,10 +43,13 @@ class BiologicalTest(Base):
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
 
+    user: Mapped["User"] = relationship("User", back_populates="tests")
+
     __mapper_args__ = {
         "polymorphic_on": test_type,
         "polymorphic_identity": "biological_test",
     }
+
 
 
 class DNAmPhenoAgeLevine2018Test(BiologicalTest):

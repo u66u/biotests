@@ -1,5 +1,6 @@
 import time
 from collections.abc import AsyncGenerator
+from typing import Optional
 import jwt
 from fastapi import Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordBearer
@@ -96,6 +97,38 @@ async def get_current_user_cookies(
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found.")
+    return user
+
+
+async def get_current_user_cookies_optional(
+    request: Request, session: AsyncSession = Depends(get_session)
+) -> Optional[User]:
+    token = request.cookies.get("access_token")
+
+    if not token:
+        return None
+
+    try:
+        payload = jwt.decode(
+            token,
+            config.settings.SECRET_KEY,
+            algorithms=[security.JWT_ALGORITHM],
+        )
+    except jwt.DecodeError:
+        return None
+
+    token_data = security.JWTTokenPayload(**payload)
+
+    if token_data.refresh:
+        return None
+
+    now = int(time.time())
+    if now < token_data.issued_at or now > token_data.expires_at:
+        return None
+
+    result = await session.execute(select(User).where(User.id == token_data.sub))
+    user = result.scalars().first()
+
     return user
 
 

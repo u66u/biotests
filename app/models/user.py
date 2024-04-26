@@ -5,8 +5,8 @@ from sqlalchemy import BigInteger, Boolean, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from app.models.base import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-
 from typing import TYPE_CHECKING
+from app.models.biological_test import BiologicalTest
 
 if TYPE_CHECKING:
     from app.models.order import Order
@@ -29,4 +29,7 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String(128), nullable=False)
     orders: Mapped[List[Order]] = relationship(
         "Order", back_populates="user", lazy="selectin"
+    )
+    tests: Mapped[List[BiologicalTest]] = relationship(
+        "BiologicalTest", back_populates="user", lazy="selectin"
     )
