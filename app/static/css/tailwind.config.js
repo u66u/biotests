@@ -20,7 +20,8 @@ module.exports = {
         'lightblack': '#252422',
         'peach': '#eb5e28',
         'chillblack': '#0e0e11',
-        'darkpink': '#c13d60'
+        'darkpink': '#c13d60',
+        'lightpurple': '#cda8cd',
       }
     },
   },

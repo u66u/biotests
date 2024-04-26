@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/tailwind.css">
+    <script src="/static/js/htmx.js"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/json-enc.js"></script>
+    <title>{% block title %}About{% endblock %}</title>
+    {% block head %}{% endblock %}
+</head>
+
+<body class="bg-[#ffb963] text-black">
+    <div class="container mx-auto px-4 py-8 w-11/12 md:w-7/12">
+        <header class="mb-4">
+            <div class="flex items-center mb-4">
+                <div class="my-14 mr-4 text-black/50 h-8 w-8 flex items-center justify-center bg-gray-600 rounded-full">■</div>
+                <h2 class="text-2xl font-bold">{% block header %}...{% endblock %}</h2>
+            </div>
+        </header>
+            <div id="menu-container" hx-get="/auth/check-token" hx-trigger="load" hx-swap="none">
+                <div id="menu" data-text-color="text-black" data-hover-text-color="hover:text-sunset-pink"></div>
+            </div>
+            <script src="/static/js/check_token.js"></script>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        <footer class="mt-8">
+            {% block footer %}
+            <p>&copy; 2024 </p>
+            {% endblock %}
+        </footer>
+    </div>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>
