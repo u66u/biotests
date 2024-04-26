@@ -34,7 +34,7 @@ The researchers used data from a large longitudinal study, the NHANES III, to tr
               <input class="w-full p-2 border border-gray-300 rounded" type="{{ info.input_type }}" step="0.00000001" id="{{ field_name }}" name="{{ field_name }}" required>
             </div>
             {% endfor %}
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button type="submit" class="bg-neutral-900 text-[#ffdb63] hover:bg-gray-800 py-2 px-4">
                 Submit
             </button>
         </form>
@@ -44,4 +44,5 @@ The researchers used data from a large longitudinal study, the NHANES III, to tr
 {% endblock %}
 
 {% block scripts %}
+<script src="/static/js/render_phenoage.js"></script>
 {% endblock %}
