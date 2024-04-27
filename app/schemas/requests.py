@@ -12,14 +12,24 @@ class RefreshTokenRequest(BaseRequest):
     refresh_token: str
 
 
-class UserUpdatePasswordRequest(BaseRequest):
-    password: str
-
-
 class UserCreateRequest(BaseRequest):
     email: EmailStr
     password: str
     name: Optional[str]
+
+
+class UserEmailUpdateRequest(BaseRequest):
+    email: EmailStr = None
+
+
+class UserDetailsUpdateRequest(BaseRequest):
+    name: str = None
+    ... # add other ones as we extend the user model
+
+
+class UserUpdatePasswordRequest(BaseRequest):
+    current_password: str
+    new_password: str
 
 
 class ProductCreateRequest(BaseRequest):

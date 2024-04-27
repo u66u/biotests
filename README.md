@@ -14,6 +14,9 @@ Keep in mind that the produced tailwind.css file will be cached in the browser, 
 
 TODO:
 - Create html template for profile
-- Password restoration and logout
-- Check for security vulnerabilities
+- Password restoration
+- Secure login and logout endpoints
+- Log out user when updating password, kill other sessions, invalidate all their tokens
+- For ba_estimation, use a hashmap instead of csv
 - Add epigenetic tests
+- Allow users to delete their data

@@ -1,6 +1,6 @@
 [tool.poetry]
 authors = ["admin <admin@example.com>"]
-description = "Venera Bio website."
+description = "Biotests"
 name = "app"
 version = "0.1.0"
 

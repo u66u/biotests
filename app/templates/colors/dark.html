@@ -9,7 +9,7 @@
     {% block head %}{% endblock %}
 </head>
 
-<body class="bg-neutral-900 text-emerald-300"></body>
+<body class="bg-neutral-900 text-green-500"></body>
    <div class="container mx-auto px-4 py-8 w-11/12 md:w-7/12">
        <header class="mb-4">
            <div class="flex items-center mb-4">
@@ -19,7 +19,7 @@
             <div id="menu-container" hx-get="/auth/check-token" hx-trigger="load" hx-swap="none">
                 <div id="menu" data-text-color="text-emerald-300" data-hover-text-color="hover:text-white"></div>
             </div>
-            <script src="/static/js/check_token.js"></script>
+            <script src="/static/js/render_menu.js"></script>
        </header>
        <main>
            {% block content %}{% endblock %}
