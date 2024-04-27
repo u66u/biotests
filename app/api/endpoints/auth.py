@@ -28,16 +28,40 @@ async def login_access_token(
     user = result.scalars().first()
 
     if user is None:
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
+        raise HTTPException(status_code=400, detail="Incorrect email or password, please double-check your credentials or restore password.")
 
     if not security.verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(status_code=400, detail="Incorrect email or password")
+        raise HTTPException(status_code=400, detail="Incorrect email or password, please double-check your credentials or restore password.")
 
     # generate access token and store it in cookies
     token = security.generate_access_token_response(str(user.id))
     deps.set_token_cookies(response, token)
 
     return token
+
+
+@router.post("/login")
+async def login_user(
+    response: Response,
+    session: AsyncSession = Depends(deps.get_session),
+    form_data: OAuth2PasswordRequestForm = Depends(),
+):
+    """Log in user in the /login template and redirect to their profile"""
+
+    result = await session.execute(select(User).where(User.email == form_data.username))
+    user = result.scalars().first()
+
+    if user is None:
+        raise HTTPException(status_code=400, detail="Incorrect email or password, please double-check your credentials or restore password.")
+
+    if not security.verify_password(form_data.password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="Incorrect email or password, please double-check your credentials or restore password.")
+
+    # generate access token and store it in cookies
+    token = security.generate_access_token_response(str(user.id))
+    deps.set_token_cookies(response, token)
+
+    return "Login successful!"
 
 
 @router.post("/refresh-token", response_model=AccessTokenResponse)
@@ -128,4 +152,5 @@ async def check_token(
         except (jwt.DecodeError, ValidationError):
             pass
 
-    return {"valid": False}
+    return {"valid": False}    
+

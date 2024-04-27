@@ -11,7 +11,6 @@ from app.schemas.data import (
     dnam_pheno_age_levine2018_test_fields,
 )
 from app.api import deps
-from app.models.user import User
 
 
 router = APIRouter()
