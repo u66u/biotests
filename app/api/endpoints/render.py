@@ -47,14 +47,18 @@ async def render_forgot_password(request: Request):
 
 
 @router.get("/profile", response_class=HTMLResponse)
-async def render_token_status(request: Request, current_user: User = Depends(deps.get_current_user_cookies_optional), session: AsyncSession = Depends(deps.get_session)):
+async def profile(request: Request, current_user: User = Depends(deps.get_current_user_cookies_optional), session: AsyncSession = Depends(deps.get_session)):
+    if current_user:
+        polymorphic_query = with_polymorphic(BiologicalTest, [DNAmPhenoAgeLevine2018Test, BloodMarketBAEstimationTest]) # add more types of tests when necessary
 
-    polymorphic_query = with_polymorphic(BiologicalTest, [DNAmPhenoAgeLevine2018Test, BloodMarketBAEstimationTest])
-    q = await session.execute(select(polymorphic_query).where(BiologicalTest.user_id == current_user.id))
+        q = await session.execute(select(polymorphic_query).where(BiologicalTest.user_id == current_user.id))
 
-    tests = (i[0] for i in q) # q.all() ?
+        tests = (i[0] for i in q) # q.all() ?
 
-    template_name = "profile.html" if current_user else "auth_error.html"
+        template_name = "profile.html"
+    else:
+        template_name = "auth_error.html"
+        tests = None
     return templates.TemplateResponse(template_name, {"request": request, "tests": tests})
 
 

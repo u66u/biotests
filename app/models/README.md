@@ -1,0 +1,1 @@
+NOTE: When adding more test types to biological_test.py, we need to update the "profile" endpoint in api/endpoints/render to include them as a part of a polymorphic query.

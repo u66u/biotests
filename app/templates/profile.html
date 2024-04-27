@@ -10,7 +10,7 @@ My Profile
 
 {% block content %}
 <div class="mb-8">
-    <h2 class="text-xl font-bold mb-4">Tests Taken</h2>
+    <h2 class="text-xl font-bold mb-4">Tests Taken:</h2>
     <ul>
         {% for test in tests %}
         <li class="mb-2">{{ test.name }}: {{test.created_at}}, {{test.result}} </li>
@@ -31,8 +31,8 @@ My Profile
     <button type="submit" class="mt-2 bg-purple-600 hover:bg-purple-700 text-white  py-2 px-4">Update Name</button>
 </form>
 <div id="update-response"></div>
-
-<form action="/users/reset-password" method="POST" hx-post="/users/reset-password" hx-target="#password-form" hx-swap="outerHTML" hx-ext="json-enc" class="mb-8" onsubmit="return checkPasswords();" id="passwordForm">
+<!-- Need to actually prevent submitting before passwords are checked, right now the request is still submitted -->
+<form hx-post="/users/reset-password" hx-target="#password-form" hx-swap="outerHTML" hx-ext="json-enc" class="mb-8" onsubmit="return checkPasswords();" id="passwordForm">
     <div class="flex flex-col">
         <div class="mb-4">
             <label for="current_password" class="block  ">Current Password:</label>
