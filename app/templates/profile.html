@@ -9,35 +9,63 @@ My Profile
 {% endblock %}
 
 {% block content %}
-<div id="content-area">
-    <p>Loading...</p>
+<div class="mb-8">
+    <h2 class="text-xl font-bold mb-4">Tests Taken</h2>
+    <ul>
+        {% for test in tests %}
+        <li class="mb-2">{{ test.name }}: {{test.created_at}}, {{test.result}} </li>
+        {% endfor %}
+    </ul>
 </div>
+
+<form hx-post="/users/update-email" hx-target="#email-form" hx-swap="outerHTML">
+    <label for="new-email">New Email:</label>
+    <input type="email" id="new-email" name="new_email" class="w-full p-2 border border-gray-300 rounded" required>
+    <button type="submit" class="mt-2 bg-purple-600 hover:bg-purple-700 text-white  py-2 px-4">Update Email</button>
+</form>
+<div id="email-form"></div>
+
+<form hx-put="/users/update-details" hx-target="#update-response" hx-swap="outerHTML" hx-ext="json-enc">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" class="w-full p-2 border border-gray-300 rounded" required>
+    <button type="submit" class="mt-2 bg-purple-600 hover:bg-purple-700 text-white  py-2 px-4">Update Name</button>
+</form>
+<div id="update-response"></div>
+
+<form action="/users/reset-password" method="POST" hx-post="/users/reset-password" hx-target="#password-form" hx-swap="outerHTML" hx-ext="json-enc" class="mb-8" onsubmit="return checkPasswords();" id="passwordForm">
+    <div class="flex flex-col">
+        <div class="mb-4">
+            <label for="current_password" class="block  ">Current Password:</label>
+            <input type="password" id="current_password" name="current_password" class="w-full p-2 border border-gray-300 rounded" required autocomplete="current-password">
+        </div>
+        <div class="flex">
+            <div class="w-1/2 pr-2">
+                <label for="new_password" class="block  ">New Password:</label>
+                <input type="password" id="new_password" name="new_password" class="w-full p-2 border border-gray-300 rounded" required autocomplete="new-password">
+            </div>
+            <div class="w-1/2 pl-2">
+                <label for="confirm_new_password" class="block  ">Confirm New Password:</label>
+                <input type="password" id="confirm_new_password" name="confirm_new_password" class="w-full p-2 border border-gray-300 rounded" required>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="mt-2 bg-purple-600 hover:bg-purple-700 text-white  py-2 px-4">Reset Password</button>
+</form>
+<div id="password-form"></div>
+
 {% endblock %}
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    fetch('/auth/check-token')
-        .then(response => response.json())
-        .then(data => {
-            const contentArea = document.getElementById('content-area');
-            if (data.valid) {
-                contentArea.innerHTML = `
-                    <div class="prose prose-lg max-w-none">
-                        <p>Welcome to our platform where you can test your biological age using a variety of blood tests. Our service allows you to gain insights into your health and longevity through detailed analysis and comparison with scientific standards.</p>
-                    </div>
-                `;
-            } else {
-                contentArea.innerHTML = `
-                    <p>You are not logged in. Please <a href="/login">login</a> to view this content.</p>
-                `;
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching auth data:', error);
-            document.getElementById('content-area').innerHTML = `<p>Error loading content. Please try again later.</p>`;
-        });
-});
+function checkPasswords() {
+    var newPassword = document.getElementById("new_password").value;
+    var confirmPassword = document.getElementById("confirm_new_password").value;
 
+    if (newPassword != confirmPassword) {
+        alert("Passwords do not match.");
+        return false;
+    }
+    return true;
+}
 </script>
 {% endblock %}

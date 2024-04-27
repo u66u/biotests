@@ -5,7 +5,7 @@ from datetime import datetime, date
 from app.models.biological_test import TestType
 
 
-class BaseRequest(BaseModel): ...
+class BaseRequest(BaseModel): pass
 
 
 class RefreshTokenRequest(BaseRequest):
@@ -24,7 +24,6 @@ class UserEmailUpdateRequest(BaseRequest):
 
 class UserDetailsUpdateRequest(BaseRequest):
     name: str = None
-    ... # add other ones as we extend the user model
 
 
 class UserUpdatePasswordRequest(BaseRequest):

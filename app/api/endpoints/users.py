@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Form
+from pydantic import EmailStr
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -52,13 +53,13 @@ async def update_user_name(
         raise HTTPException(status_code=400, detail="Failed to update name")
 
 
-@router.put("/update-email", response_model=UserResponse)
+@router.post("/update-email", response_model=UserResponse)
 async def update_user_email(
-    update_data: UserEmailUpdateRequest,
+    new_email: EmailStr = Form(...),
     current_user: User = Depends(deps.get_current_user_cookies),
     session: AsyncSession = Depends(deps.get_session),
 ):
-    current_user.email = update_data.email
+    current_user.email = new_email
     try:
         session.add(current_user)
         await session.commit()

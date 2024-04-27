@@ -4,13 +4,18 @@ from fastapi import FastAPI, Request, Depends, Response
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.responses import HTMLResponse
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import joinedload, with_polymorphic
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.data import (
     tests,
     ba_estimation_test_fields,
     dnam_pheno_age_levine2018_test_fields,
 )
+from app.models.user import User
+from app.models.biological_test import TestType, DNAmPhenoAgeLevine2018Test, BiologicalTest, BloodMarketBAEstimationTest 
 from app.api import deps
+from app.api.endpoints.auth import check_token 
 
 
 router = APIRouter()
@@ -42,8 +47,15 @@ async def render_forgot_password(request: Request):
 
 
 @router.get("/profile", response_class=HTMLResponse)
-async def render_profile(request: Request):
-    return templates.TemplateResponse("profile.html", {"request": request})
+async def render_token_status(request: Request, current_user: User = Depends(deps.get_current_user_cookies_optional), session: AsyncSession = Depends(deps.get_session)):
+
+    polymorphic_query = with_polymorphic(BiologicalTest, [DNAmPhenoAgeLevine2018Test, BloodMarketBAEstimationTest])
+    q = await session.execute(select(polymorphic_query).where(BiologicalTest.user_id == current_user.id))
+
+    tests = (i[0] for i in q) # q.all() ?
+
+    template_name = "profile.html" if current_user else "auth_error.html"
+    return templates.TemplateResponse(template_name, {"request": request, "tests": tests})
 
 
 @router.get("/tests", response_class=HTMLResponse)
