@@ -1,12 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException, Form
+from fastapi import APIRouter, Depends, Form, HTTPException
 from pydantic import EmailStr
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.responses import HTMLResponse
 
 from app.api import deps
 from app.core.security import get_password_hash, verify_password
 from app.models.user import User
-from app.schemas.requests import UserCreateRequest, UserUpdatePasswordRequest, UserDetailsUpdateRequest, UserEmailUpdateRequest
+from app.schemas.requests import (
+    UserCreateRequest,
+    UserDetailsUpdateRequest,
+    UserUpdatePasswordRequest,
+)
 from app.schemas.responses import UserResponse
 
 router = APIRouter()
@@ -33,7 +38,7 @@ async def delete_current_user(
         await session.execute(delete(User).where(User.id == current_user.id))
         await session.commit()
     except Exception as e:
-        session.rollback()
+        await session.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -49,7 +54,7 @@ async def update_user_name(
         await session.commit()
         return current_user
     except IntegrityError:
-        session.rollback()
+        await session.rollback()
         raise HTTPException(status_code=400, detail="Failed to update name")
 
 
@@ -64,8 +69,8 @@ async def update_user_email(
         session.add(current_user)
         await session.commit()
         return current_user
-    except IntegrityError as e:
-        session.rollback()
+    except IntegrityError:
+        await session.rollback()
         raise HTTPException(status_code=400, detail="Failed to update email")
 
 
@@ -73,11 +78,13 @@ async def update_user_email(
 async def reset_current_user_password(
     user_update_password: UserUpdatePasswordRequest,
     session: AsyncSession = Depends(deps.get_session),
-    current_user: User = Depends(deps.get_current_user_cookies)
+    current_user: User = Depends(deps.get_current_user_cookies),
 ):
     """Update current user password after verifying the current password"""
 
-    if not verify_password(user_update_password.current_password, current_user.hashed_password):
+    if not verify_password(
+        user_update_password.current_password, current_user.hashed_password
+    ):
         raise HTTPException(status_code=403, detail="Current password is incorrect.")
 
     current_user.hashed_password = get_password_hash(user_update_password.new_password)
@@ -86,11 +93,11 @@ async def reset_current_user_password(
         await session.commit()
         return current_user
     except Exception as e:
-        session.rollback()
+        await session.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/register", response_model=UserResponse)
+@router.post("/signup")
 async def register_new_user(
     new_user: UserCreateRequest,
     session: AsyncSession = Depends(deps.get_session),
@@ -106,4 +113,5 @@ async def register_new_user(
     )
     session.add(user)
     await session.commit()
-    return user
+    html = "<div class='p-4 py-2 border border-green-400 bg-green-100 text-green-700'>Registered successfully! Redirecting to login.</div>"
+    return HTMLResponse(html)

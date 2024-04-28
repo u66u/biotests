@@ -1,5 +1,5 @@
 import time
-from datetime import datetime, timedelta, timezone
+
 import jwt
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -10,8 +10,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api import deps
 from app.core import config, security
 from app.models.user import User
-from app.schemas.requests import RefreshTokenRequest
-from app.schemas.responses import AccessTokenResponse
+from app.schemas.requests import RefreshTokenRequest, UserCreateRequest
+from app.schemas.responses import AccessTokenResponse, UserResponse
 
 router = APIRouter()
 
@@ -28,16 +28,41 @@ async def login_access_token(
     user = result.scalars().first()
 
     if user is None:
-        raise HTTPException(status_code=400, detail="Incorrect email or password, please double-check your credentials or restore password.")
+        raise HTTPException(
+            status_code=400,
+            detail="Incorrect email or password, please double-check your credentials or restore password.",
+        )
 
     if not security.verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(status_code=400, detail="Incorrect email or password, please double-check your credentials or restore password.")
+        raise HTTPException(
+            status_code=400,
+            detail="Incorrect email or password, please double-check your credentials or restore password.",
+        )
 
     # generate access token and store it in cookies
     token = security.generate_access_token_response(str(user.id))
     deps.set_token_cookies(response, token)
 
     return token
+
+
+@router.post("/signup", response_model=UserResponse)
+async def register_new_user(
+    new_user: UserCreateRequest,
+    session: AsyncSession = Depends(deps.get_session),
+):
+    """Create new user"""
+    result = await session.execute(select(User).where(User.email == new_user.email))
+    if result.scalars().first() is not None:
+        raise HTTPException(status_code=400, detail="Cannot use this email address")
+    user = User(
+        email=new_user.email,
+        hashed_password=security.get_password_hash(new_user.password),
+        name=new_user.name,
+    )
+    session.add(user)
+    await session.commit()
+    return user
 
 
 @router.post("/login")
@@ -52,10 +77,16 @@ async def login_user(
     user = result.scalars().first()
 
     if user is None:
-        raise HTTPException(status_code=400, detail="Incorrect email or password, please double-check your credentials or restore password.")
+        raise HTTPException(
+            status_code=400,
+            detail="Incorrect email or password, please double-check your credentials or restore password.",
+        )
 
     if not security.verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(status_code=400, detail="Incorrect email or password, please double-check your credentials or restore password.")
+        raise HTTPException(
+            status_code=400,
+            detail="Incorrect email or password, please double-check your credentials or restore password.",
+        )
 
     # generate access token and store it in cookies
     token = security.generate_access_token_response(str(user.id))
@@ -152,5 +183,4 @@ async def check_token(
         except (jwt.DecodeError, ValidationError):
             pass
 
-    return {"valid": False}    
-
+    return {"valid": False}
