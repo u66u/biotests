@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from app.api.api import api_router
 from app.core import config
 
+
 app = FastAPI(
     title=config.settings.PROJECT_NAME,
     version=config.settings.VERSION,
@@ -13,6 +14,7 @@ app = FastAPI(
     openapi_url="/openapi.json",
     docs_url="/docs",
 )
+
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 app.mount("/js", StaticFiles(directory="app/static/js"), name="js")
