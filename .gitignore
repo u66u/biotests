@@ -2,7 +2,6 @@ app/static/css/node_modules/
 # postgresql
 default_database_data
 test_database_data
-app/static/js/htmx.js
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
