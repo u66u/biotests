@@ -9,7 +9,7 @@ __pycache__/
 .env
 .env.prod
 .env.dev
-
+app/static/js/htmx.js
 # C extensions
 *.so
 
