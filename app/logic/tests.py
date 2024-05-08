@@ -1,5 +1,3 @@
-import os
-import pandas as pd
 from app.schemas.requests import (
     BloodMarketBAEstimationTestCreateRequest,
     DNAmPhenoAgeLevine2018TestRequest,
@@ -85,15 +83,39 @@ def calculate_dnam_pheno_age_levine_2018(test_data: DNAmPhenoAgeLevine2018TestRe
 def calculate_blood_market_ba_estimation(
     test_data: BloodMarketBAEstimationTestCreateRequest,
 ):
-    dir = os.path.dirname(os.path.abspath(__file__))
-    csv_file_path = os.path.join(dir, "data/bloodmarker_ba_coefficients_and_means.csv")
-
+    # fmt: off
+    model_data = {
+    'age': {'coefficient_ENET': 0.074763266, 'coefficient_genderAge': 0.100432393, 'featureMean': 56.0487752},
+    'albumin': {'coefficient_ENET': -0.011331946, 'coefficient_genderAge': 0, 'featureMean': 45.1238763},
+    'alkaline_phosphatase': {'coefficient_ENET': 0.00164946, 'coefficient_genderAge': 0, 'featureMean': 82.6847975},
+    'urea': {'coefficient_ENET': -0.029554872, 'coefficient_genderAge': 0, 'featureMean': 5.3547152},
+    'cholesterol': {'coefficient_ENET': -0.0805656, 'coefficient_genderAge': 0, 'featureMean': 5.6177437},
+    'creatinine': {'coefficient_ENET': -0.01095746, 'coefficient_genderAge': 0, 'featureMean': 71.565605},
+    'cystatin_c': {'coefficient_ENET': 1.859556436, 'coefficient_genderAge': 0, 'featureMean': 0.900946},
+    'glycated_haemoglobin': {'coefficient_ENET': 0.018116675, 'coefficient_genderAge': 0, 'featureMean': 35.4785711},
+    'log_c_reactive_protein': {'coefficient_ENET': 0.079109916, 'coefficient_genderAge': 0, 'featureMean': 0.3003624},
+    'log_gamma_glutamyltransf': {'coefficient_ENET': 0.265550311, 'coefficient_genderAge': 0, 'featureMean': 3.3795613},
+    'red_blood_cell_erythrocyte_count': {'coefficient_ENET': -0.204442153, 'coefficient_genderAge': 0, 'featureMean': 4.4994648},
+    'mean_corpuscular_volume': {'coefficient_ENET': 0.017165356, 'coefficient_genderAge': 0, 'featureMean': 91.9251099},
+    'red_blood_cell_erythrocyte_distribution_width': {'coefficient_ENET': 0.202009895, 'coefficient_genderAge': 0, 'featureMean': 13.4342296},
+    'monocyte_count': {'coefficient_ENET': 0.36937314, 'coefficient_genderAge': 0, 'featureMean': 0.4746987},
+    'neutrophill_count': {'coefficient_ENET': 0.06679092, 'coefficient_genderAge': 0, 'featureMean': 4.1849454},
+    'lymphocyte_percentage': {'coefficient_ENET': -0.0108158, 'coefficient_genderAge': 0, 'featureMean': 28.5817604},
+    'mean_sphered_cell_volume': {'coefficient_ENET': 0.006736204, 'coefficient_genderAge': 0, 'featureMean': 83.6363269},
+    'log_alanine_aminotransfe': {'coefficient_ENET': -0.312442261, 'coefficient_genderAge': 0, 'featureMean': 3.077868},
+    'log_shbg': {'coefficient_ENET': 0.292323186, 'coefficient_genderAge': 0, 'featureMean': 3.8202787},
+    'log_vitamin_d': {'coefficient_ENET': -0.265467867, 'coefficient_genderAge': 0, 'featureMean': 3.6052878},
+    'high_light_scatter_reticulocyte_percentage': {'coefficient_ENET': 0.169234165, 'coefficient_genderAge': 0, 'featureMean': 0.3988152},
+    'glucose': {'coefficient_ENET': 0.032171478, 'coefficient_genderAge': 0, 'featureMean': 4.9563054},
+    'platelet_distribution_width': {'coefficient_ENET': 0.071527711, 'coefficient_genderAge': 0, 'featureMean': 16.4543576},
+    'mean_corpuscular_haemoglobin': {'coefficient_ENET': 0.02746487, 'coefficient_genderAge': 0, 'featureMean': 31.8396206},
+    'platelet_crit': {'coefficient_ENET': -1.329561046, 'coefficient_genderAge': 0, 'featureMean': 0.2385396},
+    'apolipoprotein_a': {'coefficient_ENET': -0.185139395, 'coefficient_genderAge': 0, 'featureMean': 1.5238771}
+    }
+    # fmt: on
     data_dict = test_data.model_dump()
-    birthday = data_dict["birthday"]
-    del data_dict["sex"]  # Sex is not used in the BAA calculation
-    sample_df = pd.DataFrame([data_dict])
-
-    model_data = pd.read_csv(csv_file_path)
+    birthday = data_dict.pop("birthday")
+    data_dict.pop("gender", None)
 
     # Calculate age
     current_date = datetime.now().date()
@@ -101,20 +123,19 @@ def calculate_blood_market_ba_estimation(
     age = current_date.year - birth_date.year
     if (current_date.month, current_date.day) < (birth_date.month, birth_date.day):
         age -= 1
+    data_dict["age"] = age
 
-    sample_df["age"] = age
+    # Compute BAA
+    BAA = 0
+    for feature, value in data_dict.items():
+        if feature in model_data:
+            coeff_data = model_data[feature]
+            centered_value = value - coeff_data["featureMean"]
+            baa_coefficient = (
+                coeff_data["coefficient_ENET"] - coeff_data["coefficient_genderAge"]
+            )
+            BAA += centered_value * baa_coefficient
 
-    # Filter out 'sexM' from the model data
-    model_data_adj = model_data[model_data["feature"] != "sexM"].copy()
-    model_data_adj["BAA_coefficient"] = (
-        model_data_adj["coefficient_ENET"] - model_data_adj["coefficient_SexAge"]
-    )
-
-    # Join model data with sample data on 'feature'
-    sample_df_melted = sample_df.melt(var_name="feature")
-    joined_data = pd.merge(sample_df_melted, model_data_adj, on="feature")
-    joined_data["centeredValue"] = joined_data["value"] - joined_data["featureMean"]
-
-    BAA = sum(joined_data["centeredValue"] * joined_data["BAA_coefficient"]) * 10
+    BAA *= 10
 
     return BAA

@@ -31,3 +31,6 @@ app.add_middleware(
 
 # Guards against HTTP Host Header attacks
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=config.settings.ALLOWED_HOSTS)
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

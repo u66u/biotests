@@ -1,6 +1,6 @@
 app/static/css/node_modules/
 */**/node_modules/
-.vercel
+.vercel.json
 # postgresql
 default_database_data
 test_database_data
