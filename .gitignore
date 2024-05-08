@@ -1,4 +1,5 @@
 app/static/css/node_modules/
+*/**/node_modules/
 # postgresql
 default_database_data
 test_database_data
@@ -136,3 +137,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .aider*
+.vercel
